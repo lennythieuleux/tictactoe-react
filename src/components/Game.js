@@ -6,10 +6,8 @@ const Game = () => {
     const[turn, setTurn] = useState(0);
     const[playerSign, setPlayerSign] = useState("x");
     const [grid, setGrid] = useState(Array(9).fill(null));                                  
-    const [points, setPoints] = useState({
-        playerX: 0,
-        playerO: 0
-    });                                  
+    const [pointsX, setPointsX] = useState(0);                                  
+    const [pointsO, setPointsO] = useState(0);                                  
     const [isGameOver, setGameOver] = useState(false);
     const [winner, setWinner] = useState(null);
     
@@ -40,6 +38,14 @@ const Game = () => {
         gameOutput = <Winner/>
     } else{
         gameOutput = <DrawGame/>
+    }
+
+    const PointsCounter = () => {
+        return(
+            <div className="pointsCount">
+                <span>Player x : {pointsX}</span> VS <span>Player o : {pointsO}</span>
+            </div>
+        )
     }
 
 
@@ -125,10 +131,11 @@ const Game = () => {
                 if(cell[combinations[i][0]] === cell[combinations[i][1]] && cell[combinations[i][1]] === cell[combinations[i][2]]){
                     setWinner(playerSign);
                     setGameOver(true);
-                    if(winner === "x"){
-                        setPoints({playerX: points.playerX + 1});
+                    if(playerSign === "x"){
+                        console.log('true')
+                        setPointsX(pointsX + 1);
                     } else{
-                        setPoints({playerO: points.playerO + 1});
+                        setPointsO(pointsO + 1);
                     }
                 }
             }
@@ -151,16 +158,13 @@ const Game = () => {
         }
         //If all cells are filled and game is still running, it's a draw !
         if(filledCells === 9 && isGameOver !== true){
-            console.log('hoy')
             setGameOver(true);
         }
     }
 
     return(
                 <>
-                    <div className="pointsCount">
-                        <span>Player x : {points.playerX}</span> VS <span>Player o : {points.playerO}</span>
-                    </div>
+                    {turn === 0 ? null : <PointsCounter/>}
                     {turn === 0 ? null : <DisplayGrid/>}
                     {isGameOver ? gameOutput : null}
                     <button onClick={turn === 0 ? startGame : restartGame}>{turn === 0 ? 'Start the game' : 'Restart'}</button>
